@@ -134,8 +134,8 @@ def user_split (df, ratios, chrono=False):
     """
     seed = 42                  # Set random seed
     samples = df.shape[0]      # Number of samples
-    col_time = "TIMESTAMP"
-    col_user = "USER"
+    col_time = "timestamp"
+    col_user = "user_index"
     
     # Split by each group and aggregate splits together.
     splits = []
