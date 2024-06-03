@@ -163,6 +163,50 @@ def user_split (df, ratios, chrono=False):
 
     return splits_list
 
+def user_split_cap (df, ratios, chrono=False):
+    
+    """
+    Function to split pandas DataFrame into train, validation and test (by user in chronological order)
+    
+    Params:     
+        df (pd.DataFrame): Pandas data frame to be split.
+        ratios (list of floats): list of ratios for split. The ratios have to sum to 1.
+        chrono (boolean): whether to sort in chronological order or not
+    
+    Returns: 
+        list: List of pd.DataFrame split by the given specifications.
+    """
+    seed = 42                  # Set random seed
+    samples = df.shape[0]      # Number of samples
+    col_time = "TIMESTAMP"
+    col_user = "USER"
+    
+    # Split by each group and aggregate splits together.
+    splits = []
+
+    # Sort in chronological order, the split by users
+    if chrono == True:
+        df_grouped = df.sort_values(col_time).groupby(col_user)
+    else:
+        df_grouped = df.groupby(col_user)
+
+        
+    
+    for name, group in df_grouped:
+        group_splits = random_split(df_grouped.get_group(name), ratios, shuffle=False)
+        
+        # Concatenate the list of split dataframes.
+        concat_group_splits = pd.concat(group_splits)
+        splits.append(concat_group_splits)
+    
+    # Concatenate splits for all the groups together.
+    splits_all = pd.concat(splits)
+
+    # Take split by split_index
+    splits_list = [ splits_all[splits_all["split_index"] == x] for x in range(len(ratios))]
+
+    return splits_list
+
 def neg_feedback_samples(
     df,
     rating_threshold, 
