@@ -3,6 +3,12 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from reco.evaluate import user_item_crossjoin, filter_by
 
+# Function to remove the year from the title
+def remove_year(title):
+    import re
+    # Remove the year in parentheses at the end of the title
+    return re.sub(r'\s\(\d{4}\)$', '', title)
+
 
 def encode_user_item(df, user_col, item_col, rating_col, time_col):
     """
