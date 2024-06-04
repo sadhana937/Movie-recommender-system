@@ -33,8 +33,11 @@ def get_similar(embedding, k):
 
 def show_similar(item_name, item_similar_indices, item_encoder, df_items):
     
+    item_name_lower = item_name.lower()
+
+    
     # Get the item index from the item name
-    item_index = df_items[df_items['cleaned_title'] == item_name]['movie_id'].values[0]
+    item_index = df_items[df_items['cleaned_title'].str.lower() == item_name_lower]['movie_id'].values[0]
     # Encode the item index using the item encoder
     item_encoded = item_encoder.transform([item_index])[0]
         
